@@ -37,3 +37,14 @@ def insurance(KidnapInsurance, victim, friends):
 def password():
     return "s3cr3tphras3"
 
+
+@pytest.fixture(scope="module")
+def committed_insurance(insurance, kidnapper, password, chain):
+    commit_hash = insurance.generateHash(password, {'from': kidnapper})
+    insurance.commit(commit_hash, {'from': kidnapper})
+    chain.mine(25)
+    return insurance
+
+
+
+

@@ -8,7 +8,7 @@
 
 2. Insuree gets kidnapped. Kidnapper makes a ransom demand. Anyone can top-off the insurance contract to hold at least enough funds to cover the ransom.
 
-3. Insuree gives the password to the kidnapper. The kidnapper generates a hash of the password and his address (off-chain or with `generateHash`) and can now call `initiateRansomWithdraw(hash, ransomAmount)`. This activates a hardcoded timer (e.g. 3 days), after which the kidnapper can withdraw the ransom.
+3. Insuree gives the password to the kidnapper. The kidnapper generates a hash of the password and his address (off-chain or with `generateHash`) and commits the hash to the contract with `commit`. After 20 blocks, the kidnapper can call `initiateRansomWithdraw(password, ransomAmount)`. This activates a hardcoded timer (e.g. 3 days), after which the kidnapper can withdraw the ransom.
 
 4. During the delay period, the friends of the insuree can veto the ransom payment by calling `vetoWithdraw`. Calling this functions requires a payment of two times the ransom, and it will irreversibly burn the ransom and the payed amount. 
 

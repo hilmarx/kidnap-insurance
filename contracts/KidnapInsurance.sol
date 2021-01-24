@@ -14,12 +14,15 @@ contract KidnapInsurance {
     uint256 public kidnappedTime;
     uint256 constant delay = 3 days;
 
+    mapping(address => bytes32) public commitHash;
+    mapping(address => uint256) public commitBlock;
+
     constructor(address payable _friends) payable {
         friends = _friends;
     }
 
     // Hash of the password to initiate ransom withdraw
-    bytes32 constant WITHDRAW_HASH = 0x81387e6fe7c09e310810396aee0057e20224fd16320359fae10f45392cba8c80;
+    bytes32 constant WITHDRAW_DOUBLE_HASH = 0x9cf155a4335783b44436382cfb25875ff1ffa6c2911e40027434218cf7522b79;
 
     // Generate a hash to show the sender knows the password. Can also be done off-chain.
     function generateHash(string memory _password) public view returns (bytes32 hash) {
@@ -27,13 +30,23 @@ contract KidnapInsurance {
         hash = keccak256(abi.encodePacked(msg.sender, passwordHash));
     }
 
-    function initiateRansomWithdraw(bytes32 _hash, uint256 _ransomAmount) public {
+    function commit(bytes32 _hash) public {
+        commitHash[msg.sender] = _hash;
+        commitBlock[msg.sender] = block.number;
+    }
+
+    function initiateRansomWithdraw(string memory _password, uint256 _ransomAmount) public {
         require(kidnapper == address(0), "Kidnapper: Already kindapped");
         require(address(this).balance >= _ransomAmount, "Kidnapper: Not enough ransom available");
 
         // Check if the kidnapper knows the password, front running proof
-        bytes32 correctHash = keccak256(abi.encodePacked(msg.sender, WITHDRAW_HASH));
-        require(correctHash == _hash, "Kidnapper: Invalid password or sender");
+        bytes32 passwordHash = keccak256(abi.encodePacked(_password));
+        bytes32 passwordDoubleHash = keccak256(abi.encodePacked(passwordHash));
+        bytes32 commitHash_ = keccak256(abi.encodePacked(msg.sender, passwordHash));
+
+        require(passwordDoubleHash == WITHDRAW_DOUBLE_HASH, "Kidnapper: Invalid password or sender");
+        require(commitHash_ == commitHash[msg.sender], "Kidnapper: Commit hash first");
+        require(block.number > commitBlock[msg.sender] + 20, "Kidnapper: No front running");
 
         // Set kidnapper/withdraw address and amount
         kidnapper = payable(msg.sender);
