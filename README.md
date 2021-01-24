@@ -4,11 +4,13 @@
 
 ## How it works
 
-1. Insuree pays in a ransom amount that only an address that he / she controls can withdraw (kidnapper). Insuree must memorize the private key of this address or have access to it when being kidnapped. Insuree also sets an address which is a multisig controlled by his / her friends
+1. Insuree deploys the contract with the hash of a password that only they know. Optional: Fund the contract.
 
-2. Insuree gets kidnapped. He / she gives the kidnapper access to the private key being labelled `kidnapper`. Kidnapper can now call the `initiateRansomWithdraw` function, which activates an e.g. 3 day timer. After the 3 days have passed the kidnappers can withdraw the ransom
+2. Insuree gets kidnapped. Kidnapper makes a ransom demand. Anyone can top-off the insurance contract to hold at least enough funds to cover the ransom.
 
-3. Within the 3 day period, the friends of the kidnapped person can veto the ransom payment by calling `vetoWithdraw`. However, this function is very costly to call. For example, if the ransom that was paid in by the kidnapped insuree is 1k ETH, then the veto would cost the friends 2k ETH to cast. This 2k veto payment will be burned alongside the original e.g. 1k ransom payment.
+3. Insuree gives the password to the kidnapper. The kidnapper generates a hash of the password and his address (off-chain or with `generateHash`) and commits the hash to the contract with `commit`. After 20 blocks, the kidnapper can call `initiateRansomWithdraw(password, ransomAmount)`. This activates a hardcoded timer (e.g. 3 days), after which the kidnapper can withdraw the ransom.
+
+4. During the delay period, the friends of the insuree can veto the ransom payment by calling `vetoWithdraw`. Calling this functions requires a payment of two times the ransom, and it will irreversibly burn the ransom and the payed amount. 
 
 ## Good case, kidnappers release insuree:
 
