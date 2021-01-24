@@ -12,7 +12,7 @@
 
 ## Good case, kidnappers release insuree:
 
-In case the kidnappers release the insuree, the friends don't have any financial incentive to veto the ransom withdraw of the kidnappers, because they would have to pay double the amount of the ransom payment in order to prevent the kidnappers from receiving their ransom, without getting anything in return. This will provides the kidnappers with an insurance that they know if they release the kidnapped insuree, that they will be able to withdraw the ransom (as long as the friends are rational actors and are not billionaires).
+In case the kidnappers release the insuree, the friends don't have any financial incentive to veto the ransom withdraw of the kidnappers, because they would have to pay double the amount of the ransom payment in order to prevent the kidnappers from receiving their ransom, without getting anything in return. This will provide the kidnappers with an insurance that they provides some degree of certainty that if they release the kidnapped insuree, that they will be able to withdraw the ransom (as long as the friends are rational actors and are not billionaires).
 
 ## Bad case, kidnappers don't release the insuree:
 
